@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
 import axios from "axios";
-
 import {
   Form,
   Button,
@@ -47,10 +45,19 @@ const SignUpForm = () => {
 
   return (
     <Row className={styles.Row}>
-      <Col className="my-auto py-2 p-md-2" md={6}>
-        <Container className={`${appStyles.Content} p-4 `}>
-          <h1 className={styles.Header}>sign up</h1>
+      <Col md={12} className={styles.CenteredLogoContainer}>
+        <Image
+          src="https://res.cloudinary.com/dseyqu8cu/image/upload/v1715334067/logo_q9kcdf.png"
+          className={styles.Logo}
+          alt="Logo"
+        />
+      </Col>
 
+      <Col className={`my-auto py-2 p-md-2 ${styles.FormCol}`} md={6}>
+        <Container
+          className={`${appStyles.Content} p-4 ${styles.SignUpFormContainer}`}
+        >
+          <h1 className={styles.Header}>Sign up</h1>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="username">
               <Form.Label className="d-none">Username</Form.Label>
@@ -102,6 +109,7 @@ const SignUpForm = () => {
                 {message}
               </Alert>
             ))}
+
             <Button
               className={`${btnStyles.Button} ${btnStyles.Bright} ${btnStyles.Wide}`}
               type="submit"
@@ -115,12 +123,14 @@ const SignUpForm = () => {
             ))}
           </Form>
         </Container>
+
         <Container className={`mt-3 ${appStyles.Content}`}>
           <Link className={styles.Link} to="/signin">
             Already have an account? <span>Sign in</span>
           </Link>
         </Container>
       </Col>
+
       <Col
         md={6}
         className={`my-auto d-none d-md-block p-2 ${styles.SignUpCol}`}
@@ -130,6 +140,7 @@ const SignUpForm = () => {
           src={
             "https://res.cloudinary.com/dseyqu8cu/image/upload/v1715326452/signup-form_c8yjgk.jpg"
           }
+          alt="Sign up visual"
         />
       </Col>
     </Row>

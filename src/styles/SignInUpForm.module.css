@@ -1,5 +1,9 @@
 .Row {
   height: calc(100vh - 81px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .Input {
@@ -13,12 +17,10 @@
 }
 
 .Header {
-  font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 19px;
   text-align: center;
-  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #323f69;
 }
@@ -31,17 +33,48 @@
 }
 
 .Link span {
-  color: #f7610a;
+  color: #f70ac7;
+  font-weight: 500;
 }
 
 .Container {
   padding: 30px 10px;
 }
 
-.SignInCol {
-  height: 320px;
-}
-
 .SignUpCol {
   height: 375px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Logo {
+  width: 150px;
+  margin: 100px auto 10px;
+  display: block;
+  border-radius: 20px;
+}
+
+.CenteredLogoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.SignUpFormContainer {
+  margin-top: -16px;
+}
+
+@media (max-width: 768px) {
+  .Logo {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 120px;
+  }
+
+  .SignUpFormContainer {
+    margin-top: -10px;
+  }
 }

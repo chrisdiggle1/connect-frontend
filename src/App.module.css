@@ -1,6 +1,6 @@
 .App {
   font-family: "DM Sans", sans-serif;
-  background-color: #f8f8f8;
+  background-color: #e6f7fc;
   min-height: 100vh;
 }
 
@@ -11,7 +11,7 @@
 .Content {
   background-color: #ffffff;
   padding: 10px;
-  border-radius: 2px;
+  border-radius: 30px;
   border: 1px solid #dadadf;
 }
 
@@ -19,6 +19,7 @@
   object-fit: cover;
   height: 100%;
   width: 100%;
+  border-radius: 30px;
 }
 
 .Image {
