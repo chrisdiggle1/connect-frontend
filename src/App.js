@@ -5,7 +5,8 @@ import { Route, Switch } from "react-router-dom";
 import "./api/axiosDefaults";
 import SignUpForm from "./pages/auth/SignUpForm";
 import SignInForm from "./pages/auth/SignInForm";
-import EventCreateForm from './pages/events/EventCreateForm';
+import EventCreateForm from "./pages/events/EventCreateForm";
+import EventsPage from './pages/events/EventsPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             path="/events/create"
             render={() => <EventCreateForm />}
           />
+          <Route exact path="/events/:id" render={() => <EventsPage />} />
           <Route render={() => <p>Page not found!</p>} />
         </Switch>
       </Container>
