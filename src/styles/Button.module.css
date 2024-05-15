@@ -61,3 +61,15 @@
   background-color: #2142b2;
   color: aliceblue;
 }
+
+.Form {
+  display: inline-block; 
+  margin-right: 20px;
+  background-color: #2142b2;
+  color: aliceblue;
+}
+
+.Form:hover {
+  background-color: #2142b2;
+  color: aliceblue;
+}
