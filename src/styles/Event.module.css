@@ -16,7 +16,7 @@ h5 {
 }
 
 .Heart {
-  color: #f85032;
+  color: #f832b6;
 }
 
 .Heart:hover {
@@ -24,5 +24,13 @@ h5 {
 }
 
 .HeartOutline:hover {
-  color: #f85032;
+  color: #2142b2;
+}
+
+.Check {
+  color: green;
+}
+
+.CheckOutline:hover {
+  color: #2142b2;
 }

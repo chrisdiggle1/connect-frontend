@@ -85,6 +85,60 @@ const Event = (props) => {
     }
   };
 
+  const handleAttend = async () => {
+    if (attending_id) return;
+
+    try {
+      const { data } = await axiosRes.post("/attending/", { event: id });
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              attending_count: singleEvent.attending_count + 1,
+              attending_id: data.id,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUnattend = async () => {
+    if (!attending_id) return;
+
+    try {
+      await axiosRes.delete(`/attending/${attending_id}/`);
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              attending_count: singleEvent.attending_count - 1,
+              attending_id: null,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleAttendOrUnattend = () => {
+    if (attending_id) {
+      handleUnattend();
+    } else {
+      handleAttend();
+    }
+  };
+
   return (
     <Card className={styles.Event}>
       <Card.Body>
@@ -138,6 +192,32 @@ const Event = (props) => {
             <i className="far fa-comments" />
           </Link>
           {comments_count}
+          {is_owner ? (
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>You can't attend your own event!</Tooltip>}
+            >
+              <i className="fa-solid fa-circle-check" />
+            </OverlayTrigger>
+          ) : attending_id ? (
+            <span onClick={handleAttendOrUnattend}>
+              <i className={`fa-solid fa-circle-check ${styles.Check}`} />
+            </span>
+          ) : currentUser ? (
+            <span onClick={handleAttendOrUnattend}>
+              <i
+                className={`fa-regular fa-circle-check ${styles.CheckOutline}`}
+              />
+            </span>
+          ) : (
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>Log in to attend events!</Tooltip>}
+            >
+              <i className="fa-regular fa-circle-check" />
+            </OverlayTrigger>
+          )}
+          {attending_count}
         </div>
       </Card.Body>
     </Card>
