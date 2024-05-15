@@ -4,10 +4,9 @@ import { Card, Media, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Avatar from "../../components/Avatar";
 import styles from "../../styles/Event.module.css";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { axiosRes } from "../../api/axiosDefaults";
 
 const Event = (props) => {
-  console.log("Event props:", props);
-
   const {
     id,
     owner,
@@ -19,17 +18,72 @@ const Event = (props) => {
     updated_at,
     attending_id,
     eventPage,
-    likes_id,
+    like_id,
     likes_count,
     image,
     category,
     title,
     event_date,
     description,
+    setEvents,
   } = props;
 
   const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === owner;
+
+  const handleLike = async () => {
+    if (like_id) return;
+
+    try {
+      const { data } = await axiosRes.post("/likes/", { event: id });
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              likes_count: singleEvent.likes_count + 1,
+              like_id: data.id,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUnlike = async () => {
+    if (!like_id) return;
+
+    try {
+      await axiosRes.delete(`/likes/${like_id}/`);
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              likes_count: singleEvent.likes_count - 1,
+              like_id: null,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLikeOrUnlike = () => {
+    if (like_id) {
+      handleUnlike();
+    } else {
+      handleLike();
+    }
+  };
 
   return (
     <Card className={styles.Event}>
@@ -58,35 +112,35 @@ const Event = (props) => {
         <div>
           {is_owner ? (
             <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip>You can't like your own post!</Tooltip>}
-          >
-            <i className="far fa-heart" />
-          </OverlayTrigger>
-        ) : likes_id ? (
-          <span onClick={() => {}}>
-            <i className={`fas fa-heart ${styles.Heart}`} />
-          </span>
-        ) : currentUser ? (
-          <span onClick={() => {}}>
-            <i className={`far fa-heart ${styles.HeartOutline}`} />
-          </span>
-        ) : (
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip>Log in to like posts!</Tooltip>}
-          >
-            <i className="far fa-heart" />
-          </OverlayTrigger>
-        )}
-        {likes_count}
-        <Link to={`/events/${id}`}>
-          <i className="far fa-comments" />
-        </Link>
-        {comments_count}
-      </div>
-    </Card.Body>
-  </Card>
+              placement="top"
+              overlay={<Tooltip>You can't like your own post!</Tooltip>}
+            >
+              <i className="far fa-heart" />
+            </OverlayTrigger>
+          ) : like_id ? (
+            <span onClick={handleLikeOrUnlike}>
+              <i className={`fas fa-heart ${styles.Heart}`} />
+            </span>
+          ) : currentUser ? (
+            <span onClick={handleLikeOrUnlike}>
+              <i className={`far fa-heart ${styles.HeartOutline}`} />
+            </span>
+          ) : (
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>Log in to like posts!</Tooltip>}
+            >
+              <i className="far fa-heart" />
+            </OverlayTrigger>
+          )}
+          {likes_count}
+          <Link to={`/events/${id}`}>
+            <i className="far fa-comments" />
+          </Link>
+          {comments_count}
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 
