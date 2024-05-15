@@ -34,3 +34,11 @@ h5 {
 .CheckOutline:hover {
   color: #2142b2;
 }
+
+.Interested {
+  color: red;
+}
+
+.InterestedOutline:hover {
+  color: #2142b2;
+}

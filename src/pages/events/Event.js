@@ -17,6 +17,7 @@ const Event = (props) => {
     attending_count,
     updated_at,
     attending_id,
+    interested_id,
     eventPage,
     like_id,
     likes_count,
@@ -139,6 +140,60 @@ const Event = (props) => {
     }
   };
 
+  const handleInterested = async () => {
+    if (interested_id) return;
+
+    try {
+      const { data } = await axiosRes.post("/interested/", { event: id });
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              interested_count: singleEvent.interested_count + 1,
+              interested_id: data.id,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUninterested = async () => {
+    if (!interested_id) return;
+
+    try {
+      await axiosRes.delete(`/interested/${interested_id}/`);
+      setEvents((prevEvents) => ({
+        ...prevEvents,
+        results: prevEvents.results.map((singleEvent) => {
+          if (singleEvent.id === id) {
+            return {
+              ...singleEvent,
+              interested_count: singleEvent.interested_count - 1,
+              interested_id: null,
+            };
+          }
+          return singleEvent;
+        }),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleInterestedOrUninterested = () => {
+    if (interested_id) {
+      handleUninterested();
+    } else {
+      handleInterested();
+    }
+  };
+
   return (
     <Card className={styles.Event}>
       <Card.Body>
@@ -205,9 +260,7 @@ const Event = (props) => {
             </span>
           ) : currentUser ? (
             <span onClick={handleAttendOrUnattend}>
-              <i
-                className={`fa-regular fa-circle-check ${styles.CheckOutline}`}
-              />
+              <i className={`fa-regular fa-circle-check ${styles.CheckOutline}`} />
             </span>
           ) : (
             <OverlayTrigger
@@ -218,6 +271,30 @@ const Event = (props) => {
             </OverlayTrigger>
           )}
           {attending_count}
+          {is_owner ? (
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>You can't be interested in your own event!</Tooltip>}
+            >
+              <i className="fa-regular fa-calendar" />
+            </OverlayTrigger>
+          ) : interested_id ? (
+            <span onClick={handleInterestedOrUninterested}>
+              <i className={`fa-regular fa-calendar ${styles.Interested}`} />
+            </span>
+          ) : currentUser ? (
+            <span onClick={handleInterestedOrUninterested}>
+              <i className={`fa-regular fa-calendar ${styles.InterestedOutline}`} />
+            </span>
+          ) : (
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>Log in to show interest in events!</Tooltip>}
+            >
+              <i className="fa-regular fa-calendar" />
+            </OverlayTrigger>
+          )}
+          {interested_count}
         </div>
       </Card.Body>
     </Card>
