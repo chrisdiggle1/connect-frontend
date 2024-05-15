@@ -42,3 +42,10 @@ h5 {
 .InterestedOutline:hover {
   color: #2142b2;
 }
+
+.EventActions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
